@@ -1,19 +1,37 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { IUserFields } from '../types';
 import bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
+
+interface IUserMethods {
+  checkPassword(password: string): Promise<boolean>;
+  generateToken(): void;
+}
+type IUserModel = Model<IUserFields, {}, IUserMethods>;
 
 const SALT_WORK_FACTOR = 10;
 
 const schema = mongoose.Schema;
 
-const userSchema = new schema<IUserFields>({
+const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
   username: {
     type: String,
     required: true,
-    unique: true,
+    validate: {
+      validator: async (value: string) => {
+        const user = await mongoose.models.User.findOne({ username: value });
+        return !user;
+      },
+      message: 'Username already exists',
+    },
   },
   password: {
     type: String,
+    required: true,
+  },
+  token: {
+    type: String,
+    required: true,
   },
 });
 
@@ -32,4 +50,11 @@ userSchema.set('toJSON', {
   },
 });
 
-export const User = mongoose.model('User', userSchema);
+userSchema.methods.checkPassword = async function (password: string) {
+  return bcrypt.compare(password, this.password);
+};
+userSchema.methods.generateToken = function () {
+  this.token = randomUUID();
+};
+
+export const User = mongoose.model<IUserFields, IUserModel>('User', userSchema);
