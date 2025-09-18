@@ -12,20 +12,12 @@ const trackSchema = new Schema({
     ref: 'album',
     require:true
   },
-  track_num: {
+  track_number: {
     type: Number,
     require: true,
   },
   duration: String,
 });
 
-
-trackSchema.pre('save', async function (next) {
-  if (this.isNew) {
-    const count = await mongoose.models.track.countDocuments();
-    this.track_num = count + 1;
-  }
-  next();
-});
 
 export const Track = mongoose.model('track', trackSchema);

@@ -11,8 +11,8 @@ const AlbumFeature = () => {
   const albums = useAppSelector(selectAlbums);
 
   const fetchAllAlbums = useCallback(() => {
-    dispatch(fetchAlbums());
-  }, []);
+    if (artistId) dispatch(fetchAlbums(artistId));
+  }, [artistId]);
 
   useEffect(() => {
     void fetchAllAlbums();
