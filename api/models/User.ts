@@ -16,7 +16,7 @@ const schema = mongoose.Schema;
 const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
   username: {
     type: String,
-    required: true,
+    require: true,
     validate: {
       validator: async (value: string) => {
         const user = await mongoose.models.User.findOne({ username: value });
@@ -27,11 +27,11 @@ const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
   },
   password: {
     type: String,
-    required: true,
+    require: true,
   },
   token: {
     type: String,
-    required: true,
+    require: true,
   },
 });
 

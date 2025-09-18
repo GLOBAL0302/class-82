@@ -5,15 +5,16 @@ const Schema = mongoose.Schema;
 const albumSchema = new Schema({
   title: {
     type: String,
-    required: true,
+    require: true,
   },
   artist: {
     type: Schema.Types.ObjectId,
     ref: 'artist',
+    require:true
   },
   create_at: {
-    type: String,
-    default: () => new Date().toISOString(),
+    type: Date,
+    require: true,
   },
   image: String,
 });

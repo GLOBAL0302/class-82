@@ -5,16 +5,17 @@ const trackHistorySchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
+    require: true,
   },
   track: {
     type: Schema.Types.ObjectId,
     ref: 'track',
-    required: true,
+    require: true,
   },
   played_at: {
     type: Date,
     default: Date.now,
+
   },
 });
 
