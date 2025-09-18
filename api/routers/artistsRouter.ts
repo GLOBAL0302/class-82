@@ -6,7 +6,6 @@ import { imagesUpload } from '../multer';
 const artistsRouter = express.Router();
 
 artistsRouter.get('/', async (req, res, next) => {
-  console.log('sd');
   try {
     const artists = await Artist.find();
     res.status(200).send(artists);
