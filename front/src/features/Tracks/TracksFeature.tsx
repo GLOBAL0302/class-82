@@ -19,7 +19,7 @@ const TracksFeature = () => {
   }, [fetchAllTracks, albumId]);
 
   return (
-    <div className="flex gap-3">
+    <div className="flex justify-center gap-3">
       {tracks.map((item) => (
         <TrackCard key={item._id} track={item} />
       ))}

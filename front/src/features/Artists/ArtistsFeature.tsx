@@ -17,7 +17,7 @@ const ArtistsFeature = () => {
     void fetchAllArtist();
   }, []);
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-4 justify-center">
       {allArtist.map((item) => (
         <ArtistCard key={item._id} artist={item} />
       ))}

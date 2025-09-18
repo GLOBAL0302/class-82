@@ -18,3 +18,24 @@ export interface ITrack {
   album: IAlbum;
   track_number: number;
 }
+
+
+
+
+export interface ITrackHistory{
+  user:IUser,
+  track:ITrack,
+  played_at:Date
+}
+
+export interface IUser{
+  _id:string
+  username:string,
+  token:string,
+}
+
+export interface IUserMutation{
+  username: string;
+  password: string;
+}
+

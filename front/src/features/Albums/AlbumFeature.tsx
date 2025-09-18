@@ -19,7 +19,7 @@ const AlbumFeature = () => {
   }, [artistId, fetchAllAlbums]);
 
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div className="flex gap-2 flex-wrap justify-center">
       {albums.map((item) => (
         <AlbumCard key={item._id} album={item} />
       ))}
