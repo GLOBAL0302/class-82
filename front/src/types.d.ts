@@ -19,23 +19,36 @@ export interface ITrack {
   track_number: number;
 }
 
-
-
-
-export interface ITrackHistory{
-  user:IUser,
-  track:ITrack,
-  played_at:Date
+export interface ITrackHistory {
+  user: IUser;
+  track: ITrack;
+  played_at: Date;
 }
 
-export interface IUser{
-  _id:string
-  username:string,
-  token:string,
+export interface IUser {
+  _id: string;
+  username: string;
+  token: string;
 }
 
-export interface IUserMutation{
+export interface IUserMutation {
   username: string;
   password: string;
 }
 
+export interface RegisterResponse {
+  user: IUser;
+  message: string;
+}
+
+export interface ValidationError {
+  errors: {
+    [key: string]: {
+      name: string;
+      message: string;
+    };
+  };
+  message: string;
+  name: string;
+  _message: string;
+}

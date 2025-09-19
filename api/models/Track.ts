@@ -6,12 +6,12 @@ const schema = mongoose.Schema;
 const trackSchema = new Schema({
   title: {
     type: String,
-    require: true,
+    required: true,
   },
   album: {
     type: Schema.Types.ObjectId,
     ref: 'album',
-    require: true,
+    required: true,
     validate: {
       validator: async (value: mongoose.Types.ObjectId) => {
         const album = await Album.findById(value);
@@ -22,7 +22,7 @@ const trackSchema = new Schema({
   },
   track_number: {
     type: Number,
-    require: true,
+    required: true,
   },
   duration: String,
 });

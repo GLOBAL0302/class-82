@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const artistSchema = new Schema({
   title: {
     type: String,
-    require: true,
+    required: true,
   },
   image: String,
   description: String,

@@ -8,9 +8,14 @@ tracksRouter.get('/', async (req, res, next) => {
   try {
     const albumId = req.query.albumId;
     let filter = albumId ? { album: albumId } : {};
-    const tracks = await Track.find(filter).populate({path:"album", populate:{
-      path:"artist"
-    }}).sort({track_number:1});
+    const tracks = await Track.find(filter)
+      .populate({
+        path: 'album',
+        populate: {
+          path: 'artist',
+        },
+      })
+      .sort({ track_number: 1 });
     res.status(200).send(tracks);
   } catch (error) {
     if (error instanceof Error.ValidationError) {

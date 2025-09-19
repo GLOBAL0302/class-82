@@ -1,19 +1,40 @@
 import { Avatar, Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { signinThunk } from './userThunk';
+import { selectUserSigninError } from './userSlice';
 const initalStateUserMutation = {
   username: '',
   password: '',
 };
 
 const SigninUser = () => {
-  const [userMutation, setUserMutation] = useState(initalStateUserMutation);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const onSubmitSignin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(userMutation);
+  const [userMutation, setUserMutation] = useState(initalStateUserMutation);
+  const error = useAppSelector(selectUserSigninError);
+
+  const getFieldError = (fieldName: string) => {
+    try {
+      return error?.errors[fieldName].message;
+    } catch (e) {
+      return undefined;
+    }
   };
+
+  const onSubmitSignin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await dispatch(signinThunk(userMutation)).unwrap();
+      navigate('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const handleUserMutation = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { value, name } = e.target;
     setUserMutation((prevState) => ({
@@ -21,7 +42,6 @@ const SigninUser = () => {
       [name]: value,
     }));
   };
-
   return (
     <>
       <Box component="div" className="flex flex-col items-center gap-4">
@@ -32,8 +52,30 @@ const SigninUser = () => {
           Sign in
         </Typography>
         <Box component="form" onSubmit={onSubmitSignin} className="w-96 flex flex-col gap-2">
-          <TextField id="filled-basic" label="Username" fullWidth variant="filled" onChange={handleUserMutation} />
-          <TextField id="filled-basic" label="password" fullWidth variant="filled" onChange={handleUserMutation} />
+          <TextField
+            id="username"
+            name="username"
+            label="Username"
+            fullWidth
+            variant="filled"
+            onChange={handleUserMutation}
+            type="text"
+            autoComplete="new-user"
+            error={Boolean(getFieldError('username'))}
+            helperText={getFieldError('username')}
+          />
+          <TextField
+            id="password"
+            label="Password"
+            name="password"
+            fullWidth
+            variant="filled"
+            onChange={handleUserMutation}
+            type="password"
+            autoComplete="new-password"
+            error={Boolean(getFieldError('password'))}
+            helperText={getFieldError('password')}
+          />
           <Button variant="contained" color="primary" type="submit">
             Signin
           </Button>

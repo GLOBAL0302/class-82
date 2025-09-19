@@ -7,12 +7,12 @@ const Schema = mongoose.Schema;
 const albumSchema = new Schema({
   title: {
     type: String,
-    require: true,
+    required: true,
   },
   artist: {
     type: Schema.Types.ObjectId,
     ref: 'artist',
-    require: true,
+    required: true,
     validate: {
       validator: async (value: mongoose.Types.ObjectId) => {
         const artist = await Artist.findById(value);
@@ -23,7 +23,7 @@ const albumSchema = new Schema({
   },
   create_at: {
     type: Date,
-    require: true,
+    required: true,
   },
   image: String,
 });

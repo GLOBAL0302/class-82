@@ -9,7 +9,7 @@ albumsRouter.get('/', async (req, res, next) => {
   try {
     const artistId = req.query.artistId;
     let filter = artistId ? { artist: artistId } : {};
-    const albums = await Album.find(filter).populate("artist");
+    const albums = await Album.find(filter).populate('artist');
     res.status(200).send(albums);
   } catch (error) {
     if (error instanceof Error.ValidationError) {

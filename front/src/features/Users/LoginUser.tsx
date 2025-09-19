@@ -30,8 +30,26 @@ const LoginUser = () => {
         Log in
       </Typography>
       <Box component="form" onSubmit={onSubmitLogin} className="w-96 flex flex-col gap-2">
-        <TextField id="filled-basic" label="Username" fullWidth variant="filled" onChange={handleUserMutation} />
-        <TextField id="filled-basic" label="password" fullWidth variant="filled" onChange={handleUserMutation} />
+        <TextField
+          id="username"
+          label="Username"
+          name="username"
+          fullWidth
+          variant="filled"
+          type="text"
+          onChange={handleUserMutation}
+          autoComplete="current-user"
+        />
+        <TextField
+          id="password"
+          label="Password"
+          name="password"
+          fullWidth
+          variant="filled"
+          type="password"
+          onChange={handleUserMutation}
+          autoComplete="current-password"
+        />
         <Button variant="contained" color="primary" type="submit">
           Signin
         </Button>

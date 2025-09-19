@@ -16,22 +16,22 @@ const schema = mongoose.Schema;
 const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
   username: {
     type: String,
-    require: true,
+    required: true,
     validate: {
-      validator: async (value: string) => {
-        const user = await mongoose.models.User.findOne({ username: value });
-        return !user;
+      validator: async (value: string): Promise<boolean> => {
+        const user = await User.findOne({ username: value });
+        return Boolean(!user);
       },
       message: 'Username already exists',
     },
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   token: {
     type: String,
-    require: true,
+    required: true,
   },
 });
 

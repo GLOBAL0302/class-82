@@ -16,7 +16,7 @@ usersRouter.post('/', async (req, res, next) => {
     res.status(200).send(savedUser);
   } catch (error) {
     if (error instanceof Error.ValidationError) {
-      res.status(400).send({ error: error.message });
+      res.status(400).send(error);
     }
     next(error);
   }
@@ -45,7 +45,7 @@ usersRouter.post('/sessions', async (req, res, next) => {
     });
   } catch (error) {
     if (error instanceof Error.ValidationError) {
-      res.status(400).send({ error: error.message });
+      res.status(400).send({ error });
     }
     next(error);
   }

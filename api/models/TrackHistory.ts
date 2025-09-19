@@ -13,19 +13,19 @@ const trackHistorySchema = new Schema({
         const track = await User.findById(value);
         return Boolean(track);
       },
-      message:"User does not exits when add track history"
+      message: 'User does not exits when add track history',
     },
   },
   track: {
     type: Schema.Types.ObjectId,
     ref: 'track',
-    require: true,
+    required: true,
     validate: {
       validator: async (value: mongoose.Types.ObjectId) => {
         const track = await Track.findById(value);
         return Boolean(track);
       },
-      message:"Track id does not exits when add track history"
+      message: 'Track id does not exits when add track history',
     },
   },
   played_at: {
