@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosApi } from '../../axiosApi';
-import type { IUser, IUserMutation, RegisterResponse, ValidationError } from '../../types';
+import type { IUser, ISigninMutation, RegisterResponse, ValidationError, IGlobalError } from '../../types';
 import { isAxiosError } from 'axios';
 
-export const signinThunk = createAsyncThunk<RegisterResponse, IUserMutation, { rejectValue: ValidationError }>(
+export const signinThunk = createAsyncThunk<RegisterResponse, ISigninMutation, { rejectValue: ValidationError }>(
   'user/signin',
   async (userMutation, { rejectWithValue }) => {
     try {
@@ -18,7 +18,17 @@ export const signinThunk = createAsyncThunk<RegisterResponse, IUserMutation, { r
   },
 );
 
-export const loginThunk = createAsyncThunk<IUser, IUserMutation>('user/login', async (userMutation) => {
-  const { data } = await axiosApi.post('/users/sessions', userMutation);
-  return data;
-});
+export const loginThunk = createAsyncThunk<IUser, ISigninMutation, { rejectValue: IGlobalError }>(
+  'user/login',
+  async (userMutation, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosApi.post('/users/sessions', userMutation);
+      return data.user;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data);
+      }
+      throw e;
+    }
+  },
+);

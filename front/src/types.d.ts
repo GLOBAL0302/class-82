@@ -31,7 +31,12 @@ export interface IUser {
   token: string;
 }
 
-export interface IUserMutation {
+export interface ISigninMutation {
+  username: string;
+  password: string;
+}
+
+export interface ILoginMutation {
   username: string;
   password: string;
 }
@@ -51,4 +56,8 @@ export interface ValidationError {
   message: string;
   name: string;
   _message: string;
+}
+
+export interface IGlobalError {
+  error: string;
 }

@@ -4,8 +4,8 @@ import './index.css';
 import AlbumFeature from './features/Albums/AlbumFeature';
 import TracksFeature from './features/Tracks/TracksFeature';
 import AppToolBar from './components/AppToolBar/AppToolBar';
-import LoginUser from './features/Users/loginUser';
 import SigninUser from './features/Users/SigninUser';
+import LoginUser from './features/Users/LoginUser';
 
 function App() {
   return (

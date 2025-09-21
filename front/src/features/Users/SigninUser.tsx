@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { signinThunk } from './userThunk';
-import { selectUserSigninError } from './userSlice';
+import { selectUserSigninError, selectUserSigninLoading } from './userSlice';
 const initalStateUserMutation = {
   username: '',
   password: '',
@@ -15,11 +15,12 @@ const SigninUser = () => {
   const navigate = useNavigate();
 
   const [userMutation, setUserMutation] = useState(initalStateUserMutation);
-  const error = useAppSelector(selectUserSigninError);
+  const signinError = useAppSelector(selectUserSigninError);
+  const signinLoading = useAppSelector(selectUserSigninLoading);
 
   const getFieldError = (fieldName: string) => {
     try {
-      return error?.errors[fieldName].message;
+      return signinError?.errors[fieldName].message;
     } catch (e) {
       return undefined;
     }
@@ -76,7 +77,7 @@ const SigninUser = () => {
             error={Boolean(getFieldError('password'))}
             helperText={getFieldError('password')}
           />
-          <Button variant="contained" color="primary" type="submit">
+          <Button disabled={signinLoading} loading={signinLoading} variant="contained" color="primary" type="submit">
             Signin
           </Button>
           <Grid>

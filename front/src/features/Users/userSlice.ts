@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { IUser, ValidationError } from '../../types';
-import { signinThunk } from './userThunk';
+import type { IGlobalError, IUser, ValidationError } from '../../types';
+import { loginThunk, signinThunk } from './userThunk';
 
 interface userInitialState {
   user: IUser | null;
   userSigninLoading: boolean;
   userSigninError: ValidationError | null;
   userLoginLoading: boolean;
-  userLoginError: boolean;
+  userLoginError: IGlobalError | null;
 }
 
 const initialState: userInitialState = {
@@ -15,7 +15,7 @@ const initialState: userInitialState = {
   userSigninLoading: false,
   userSigninError: null,
   userLoginLoading: false,
-  userLoginError: false,
+  userLoginError: null,
 };
 
 const userSlice = createSlice({
@@ -35,6 +35,19 @@ const userSlice = createSlice({
       .addCase(signinThunk.rejected, (state, { payload: error }) => {
         state.userSigninLoading = false;
         state.userSigninError = error || null;
+      });
+    builder
+      .addCase(loginThunk.pending, (state) => {
+        state.userSigninLoading = true;
+        state.userSigninError = null;
+      })
+      .addCase(loginThunk.fulfilled, (state, { payload: user }) => {
+        state.userSigninLoading = false;
+        state.user = user;
+      })
+      .addCase(loginThunk.rejected, (state, { payload: error }) => {
+        state.userSigninLoading = false;
+        state.userLoginError = error || null;
       });
   },
   selectors: {

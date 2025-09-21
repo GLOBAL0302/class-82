@@ -1,18 +1,31 @@
-import { Avatar, Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { Alert, Avatar, Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import type { ILoginMutation } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { loginThunk } from './userThunk';
+import { selectUserLoginError, selectUserLoginLoading } from './userSlice';
 const initalStateUserMutation = {
   username: '',
   password: '',
 };
 
 const LoginUser = () => {
-  const [userMutation, setUserMutation] = useState(initalStateUserMutation);
+  const navigate = useNavigate();
+  const [userMutation, setUserMutation] = useState<ILoginMutation>(initalStateUserMutation);
+  const dispatch = useAppDispatch();
+  const loginError = useAppSelector(selectUserLoginError);
+  const loginLoading = useAppSelector(selectUserLoginLoading);
 
-  const onSubmitLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(userMutation);
+    try {
+      await dispatch(loginThunk(userMutation)).unwrap();
+      navigate('/');
+    } catch (e) {
+      console.log(e);
+    }
   };
   const handleUserMutation = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -29,6 +42,7 @@ const LoginUser = () => {
       <Typography variant="h4" component="h5">
         Log in
       </Typography>
+      {loginError && <Alert severity="error">{loginError.error}</Alert>}
       <Box component="form" onSubmit={onSubmitLogin} className="w-96 flex flex-col gap-2">
         <TextField
           id="username"
@@ -50,7 +64,7 @@ const LoginUser = () => {
           onChange={handleUserMutation}
           autoComplete="current-password"
         />
-        <Button variant="contained" color="primary" type="submit">
+        <Button disabled={loginLoading} loading={loginLoading} variant="contained" color="primary" type="submit">
           Signin
         </Button>
         <Grid>
