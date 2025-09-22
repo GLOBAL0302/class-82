@@ -6,6 +6,7 @@ import TracksFeature from './features/Tracks/TracksFeature';
 import AppToolBar from './components/AppToolBar/AppToolBar';
 import SigninUser from './features/Users/SigninUser';
 import LoginUser from './features/Users/LoginUser';
+import Track_history from './features/Track_History/Track_history';
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
           <Route path="/login" element={<LoginUser />} />
           <Route path="/signin" element={<SigninUser />} />
           <Route path="/albums/:artistId" element={<AlbumFeature />} />
+          <Route path="/tracks" element={<TracksFeature />} />
           <Route path="/tracks/:albumId" element={<TracksFeature />} />
+          <Route path="/tracks_history" element={<Track_history />} />
         </Routes>
       </div>
     </>

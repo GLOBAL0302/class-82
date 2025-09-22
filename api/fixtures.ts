@@ -11,7 +11,7 @@ const run = async () => {
     await db.dropCollection('albums');
     await db.dropCollection('artists');
     await db.dropCollection('tracks');
-    await db.dropCollection('trackHistories');
+    await db.dropCollection('trackhistories');
     await db.dropCollection('users');
   } catch (e) {
     console.log('Collection were not created');
@@ -72,6 +72,7 @@ const run = async () => {
       track_number: 1,
       duration: '3:32',
       isPublished: true,
+      url: 'https://www.youtube.com/watch?v=xFYQQPAOz7Y',
     },
     {
       title: 'Never Enough',

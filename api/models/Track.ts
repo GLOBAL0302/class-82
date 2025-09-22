@@ -25,6 +25,10 @@ const trackSchema = new Schema({
     required: true,
   },
   duration: String,
+  url: {
+    type: String,
+    default: 'https://www.youtube.com/watch?v=xFYQQPAOz7Y',
+  },
 });
 
 export const Track = mongoose.model('track', trackSchema);

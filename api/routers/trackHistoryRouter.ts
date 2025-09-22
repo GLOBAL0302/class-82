@@ -1,27 +1,43 @@
 import express from 'express';
 import { Error } from 'mongoose';
 import { TrackHistory } from '../models/TrackHistory';
-import { User } from '../models/User';
+import auth, { RequestWithUser } from '../middleware/auth';
 
 const trackHistoryRouter = express.Router();
 
-trackHistoryRouter.post('/', async (req, res, next) => {
+trackHistoryRouter.get('/', auth, async (req, res, next) => {
   try {
-    const token = req.get('Authorization');
-    if (!token) {
-      return res.status(401).send({
-        error: 'No token Provided',
-      });
+    const user = (req as RequestWithUser).user;
+    const track_histories = await TrackHistory.find({ user })
+      .populate({
+        path: 'track',
+        populate: {
+          path: 'album',
+          populate: {
+            path: 'artist',
+          },
+        },
+      })
+      .sort({ played_at: -1 });
+    res.status(200).send(track_histories);
+  } catch (e) {
+    if (e instanceof Error.ValidationError) {
+      res.status(400).send({ error: e });
     }
+    next(e);
+  }
+});
 
-    const user = await User.findOne({ token });
+trackHistoryRouter.post('/', auth, async (req, res, next) => {
+  try {
+    const user = (req as RequestWithUser).user;
     if (!user) {
       return res.status(401).send({
         error: 'UNAUTHORIZED',
       });
     }
     const newTrackHistory = new TrackHistory({
-      user: user._id,
+      user: user,
       track: req.body.track,
     });
 

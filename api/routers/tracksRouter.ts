@@ -1,10 +1,11 @@
 import express from 'express';
 import { Error } from 'mongoose';
 import { Track } from '../models/Track';
+import auth from '../middleware/auth';
 
 const tracksRouter = express.Router();
 
-tracksRouter.get('/', async (req, res, next) => {
+tracksRouter.get('/', auth, async (req, res, next) => {
   try {
     const albumId = req.query.albumId;
     let filter = albumId ? { album: albumId } : {};

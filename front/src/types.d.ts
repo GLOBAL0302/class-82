@@ -17,9 +17,11 @@ export interface ITrack {
   title: string;
   album: IAlbum;
   track_number: number;
+  url: string;
 }
 
 export interface ITrackHistory {
+  _id: string;
   user: IUser;
   track: ITrack;
   played_at: Date;
