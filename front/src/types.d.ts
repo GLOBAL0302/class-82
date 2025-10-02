@@ -5,6 +5,13 @@ export interface IArtist {
   description: string;
 }
 
+export interface IArtistMutation {
+  title: string;
+  image: File | null;
+  description: string;
+}
+
+
 export interface IAlbum {
   _id: string;
   title: string;
@@ -31,6 +38,7 @@ export interface IUser {
   _id: string;
   username: string;
   token: string;
+  role:string
 }
 
 export interface ISigninMutation {

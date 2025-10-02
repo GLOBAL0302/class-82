@@ -1,15 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { IArtist } from '../../vite-env';
-import { fetchArtist } from './artistsThunk';
+import { fetchArtist, postArtistFormThunk } from './artistsThunk';
+import type { IGlobalError } from '../../types';
 
 interface IArtistInitialState {
   artists: IArtist[];
   artistLoading: boolean;
+  postingArtistLoading: boolean;
+  postingArtistError: IGlobalError | null;
 }
 
 const initialState: IArtistInitialState = {
   artists: [],
   artistLoading: false,
+  postingArtistLoading: false,
+  postingArtistError: null,
 };
 
 export const artistsSlice = createSlice({
@@ -28,12 +33,24 @@ export const artistsSlice = createSlice({
       .addCase(fetchArtist.rejected, (state) => {
         state.artistLoading = false;
       });
+
+    builder
+      .addCase(postArtistFormThunk.pending, (state) => {
+        state.postingArtistLoading = true;
+      })
+      .addCase(postArtistFormThunk.fulfilled, (state) => {
+        state.postingArtistLoading = false;
+      })
+      .addCase(postArtistFormThunk.rejected, (state, { payload }) => {
+        state.postingArtistError = payload || null;
+      });
   },
   selectors: {
     selectArtists: (state) => state.artists,
     selectArtistsLoading: (state) => state.artistLoading,
+    selectArtistPostLoading:(state)=>state.postingArtistLoading
   },
 });
 
 export const artistReducer = artistsSlice.reducer;
-export const { selectArtists, selectArtistsLoading } = artistsSlice.selectors;
+export const { selectArtists, selectArtistsLoading, selectArtistPostLoading } = artistsSlice.selectors;

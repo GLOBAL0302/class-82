@@ -36,6 +36,12 @@ const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    required: true,
+    default: 'user',
+  },
 });
 
 userSchema.pre('save', async function (next) {

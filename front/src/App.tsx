@@ -7,6 +7,7 @@ import AppToolBar from './components/AppToolBar/AppToolBar';
 import SigninUser from './features/Users/SigninUser';
 import LoginUser from './features/Users/LoginUser';
 import Track_history from './features/Track_History/Track_history';
+import AddArtistForm from './features/Artists/addArtistForm';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path="/tracks" element={<TracksFeature />} />
           <Route path="/tracks/:albumId" element={<TracksFeature />} />
           <Route path="/tracks_history" element={<Track_history />} />
+
+          <Route path="/addArtist" element={<AddArtistForm/>}/>
         </Routes>
       </div>
     </>

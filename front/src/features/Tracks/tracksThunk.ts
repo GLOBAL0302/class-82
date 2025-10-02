@@ -18,7 +18,7 @@ export const addTrackToHistory = createAsyncThunk<void, ITrack, { state: RootSta
   async (track, thunkApi) => {
     const token = thunkApi.getState().user.user?.token;
     console.log(track);
-    axiosApi.post('/track_history', { track: track._id }, { headers: { Authorization: token } });
+    axiosApi.post('/track_history', { track: track._id });
   },
 );
 
@@ -26,7 +26,7 @@ export const fetchTrackHistoryThunk = createAsyncThunk<ITrackHistory[], void, { 
   'tracks/fetchTrackHistoryThunk',
   async (_, thunkApi) => {
     const token = thunkApi.getState().user.user?.token;
-    const { data } = await axiosApi.get('/track_history', { headers: { Authorization: token } });
+    const { data } = await axiosApi.get('/track_history');
     return data;
   },
 );

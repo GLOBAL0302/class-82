@@ -29,6 +29,10 @@ const trackSchema = new Schema({
     type: String,
     default: 'https://www.youtube.com/watch?v=xFYQQPAOz7Y',
   },
+  isPublished: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const Track = mongoose.model('track', trackSchema);

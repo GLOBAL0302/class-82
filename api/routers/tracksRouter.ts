@@ -26,7 +26,7 @@ tracksRouter.get('/', auth, async (req, res, next) => {
   }
 });
 
-tracksRouter.post('/', async (req, res, next) => {
+tracksRouter.post('/', auth, async (req, res, next) => {
   try {
     const newTrack = new Track({
       title: req.body.title,

@@ -22,9 +22,9 @@ const ArtistCard: React.FC<Props> = ({ artist }) => {
     image = apiUrl + '/' + artist.image;
   }
   return (
-    <Card sx={{ maxWidth: 345, border: 1 }}>
+    <Card sx={{ width: 300, border: 1 }} className='shadow-2xl'>
       <CardActionArea onClick={handleNavigate}>
-        <CardMedia component="img" height="140" image={image} alt="green iguana" />
+        <CardMedia component="img" sx={{width:300, height:300}} image={image} alt="green iguana" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {artist.title}

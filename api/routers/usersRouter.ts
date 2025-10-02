@@ -1,6 +1,7 @@
 import express from 'express';
 import { Error } from 'mongoose';
 import { User } from '../models/User';
+import { randomUUID } from 'crypto';
 
 const usersRouter = express.Router();
 
@@ -53,6 +54,24 @@ usersRouter.post('/sessions', async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error.ValidationError) {
       res.status(400).send({ error });
+    }
+    next(error);
+  }
+});
+
+usersRouter.delete('/sessions', async (req, res, next) => {
+  try {
+    const token = req.get('Authorization');
+    const success = { message: 'Success' };
+    if (!token) res.send(success);
+    const user = await User.findOne({ token });
+    if (!user) return res.send(success);
+    user.token = randomUUID();
+    await user.save();
+    return res.status(200).send(success);
+  } catch (error) {
+    if (error instanceof Error.ValidationError) {
+      res.status(400).send(error);
     }
     next(error);
   }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import {useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { fetchAlbums } from './albumThunk';
 import { selectAlbums } from './albumSlice';
