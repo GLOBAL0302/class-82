@@ -8,8 +8,13 @@ import SigninUser from './features/Users/SigninUser';
 import LoginUser from './features/Users/LoginUser';
 import Track_history from './features/Track_History/Track_history';
 import AddArtistForm from './features/Artists/AddArtistForm';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { useAppSelector } from './app/hooks';
+import { selectUser } from './features/Users/userSlice';
+import AddAlbum from './features/Albums/AddAlbum';
 
 function App() {
+  const user = useAppSelector(selectUser);
   return (
     <>
       <AppToolBar />
@@ -23,7 +28,23 @@ function App() {
           <Route path="/tracks/:albumId" element={<TracksFeature />} />
           <Route path="/tracks_history" element={<Track_history />} />
 
-          <Route path="/addArtist" element={<AddArtistForm />} />
+          <Route
+            path="/addArtist"
+            element={
+              <ProtectedRoute isAllowed={user && user.role == 'admin'}>
+                <AddArtistForm />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/addAlbum"
+            element={
+              <ProtectedRoute isAllowed={user && user.role == 'admin'}>
+                <AddAlbum />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </>

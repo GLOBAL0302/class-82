@@ -20,6 +20,14 @@ export interface IAlbum {
   image: string;
   isPublished: boolean;
 }
+
+export interface IAlbumMutation {
+  title: string;
+  artist: string;
+  create_at: string;
+  image: File | null;
+  isPublished: string;
+}
 export interface ITrack {
   _id: string;
   title: string;

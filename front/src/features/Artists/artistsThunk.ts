@@ -42,8 +42,7 @@ export const artistDeleteThunk = createAsyncThunk<void, string>(
 export const artistToggleThunk = createAsyncThunk<void, string, { state: RootState }>(
   'artists/artistToggleThunk',
   async (artistId, thunkApi) => {
-    const token = thunkApi.getState().user.user?.token;
-    await axiosApi.patch(`/artists/${artistId}/togglePublished`, { headers: { Authorization: token } });
+    await axiosApi.patch(`/artists/${artistId}/togglePublished`);
     await thunkApi.dispatch(fetchArtist());
   },
 );

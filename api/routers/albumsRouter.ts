@@ -23,11 +23,13 @@ albumsRouter.get('/', async (req, res, next) => {
 
 albumsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
   try {
+    const isPublished = String(req.body.isPublished).toLowerCase() === 'true';
     const newAlbum = await Album.create({
       title: req.body.title,
       artist: req.body.artist,
-      image: req.file ? req.file.filename : null,
+      image: req.file ? 'images' + req.file.filename : null,
       create_at: req.body.create_at,
+      isPublished: isPublished,
     });
     const savedAlbum = await newAlbum.save();
     res.status(200).send(savedAlbum);
