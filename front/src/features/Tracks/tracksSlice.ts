@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { ITrack, ITrackHistory } from '../../types';
-import { fetchTrackHistoryThunk, fetchTracks } from './tracksThunk';
+import { fetchTrackHistoryThunk, fetchTracks, trackDeleteThunk } from './tracksThunk';
 
 interface ITrackInitialState {
   tracks: ITrack[];
   tracksFetching: boolean;
   track_history: ITrackHistory[];
   track_historyFetching: boolean;
+  trackDeletingLoading: boolean;
 }
 
 const initialState: ITrackInitialState = {
@@ -14,12 +15,17 @@ const initialState: ITrackInitialState = {
   tracksFetching: false,
   track_history: [],
   track_historyFetching: false,
+  trackDeletingLoading: false,
 };
 
 const tracksSlice = createSlice({
   name: 'track',
   initialState,
-  reducers: {},
+  reducers: {
+    deleteTrack: (state, { payload }) => {
+      state.tracks = state.tracks.filter((item) => item._id !== payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchTracks.pending, (state) => {
@@ -43,13 +49,26 @@ const tracksSlice = createSlice({
       .addCase(fetchTrackHistoryThunk.rejected, (state) => {
         state.tracksFetching = false;
       });
+
+    builder
+      .addCase(trackDeleteThunk.pending, (state) => {
+        state.trackDeletingLoading = false;
+      })
+      .addCase(trackDeleteThunk.fulfilled, (state) => {
+        state.trackDeletingLoading = false;
+      })
+      .addCase(trackDeleteThunk.rejected, (state) => {
+        state.trackDeletingLoading = false;
+      });
   },
   selectors: {
     selectTracks: (state) => state.tracks,
     selectTracksFetching: (state) => state.tracksFetching,
     selectTrack_history: (state) => state.track_history,
+    selectTrackDelLoading: (state) => state.trackDeletingLoading,
   },
 });
 
 export const tracksReducer = tracksSlice.reducer;
-export const { selectTracks, selectTracksFetching, selectTrack_history } = tracksSlice.selectors;
+export const { deleteTrack } = tracksSlice.actions;
+export const { selectTracks, selectTracksFetching, selectTrack_history, selectTrackDelLoading } = tracksSlice.selectors;

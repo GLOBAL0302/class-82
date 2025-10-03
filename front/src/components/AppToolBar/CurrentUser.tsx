@@ -19,10 +19,10 @@ const CurrentUser: React.FC<Props> = ({ user }) => {
     setAnchorEl(e.currentTarget);
   };
 
-  const logOut = ()=>{
-    dispatch(logOutThunk())
-    setAnchorEl(null)
-  }
+  const logOut = () => {
+    dispatch(logOutThunk());
+    setAnchorEl(null);
+  };
 
   const handleClose = () => {
     navigate('/tracks_history');
@@ -51,7 +51,7 @@ const CurrentUser: React.FC<Props> = ({ user }) => {
         }}
       >
         <MenuItem onClick={handleClose}>Track History</MenuItem>
-         <MenuItem onClick={logOut}>Log Out</MenuItem>
+        <MenuItem onClick={logOut}>Log Out</MenuItem>
       </Menu>
     </>
   );

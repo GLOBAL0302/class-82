@@ -22,9 +22,9 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    unsetUser:(state)=>{
-      state.user =  null
-    }
+    unsetUser: (state) => {
+      state.user = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -64,7 +64,7 @@ const userSlice = createSlice({
 });
 
 export const userReducer = userSlice.reducer;
-export const {unsetUser} = userSlice.actions
+export const { unsetUser } = userSlice.actions;
 export const {
   selectUser,
   selectUserLoginError,

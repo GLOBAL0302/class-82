@@ -21,7 +21,7 @@ albumsRouter.get('/', async (req, res, next) => {
   }
 });
 
-albumsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), async (req, res, next) => {
+albumsRouter.post('/', auth, imagesUpload.single('image'), async (req, res, next) => {
   try {
     const newAlbum = await Album.create({
       title: req.body.title,
@@ -39,7 +39,7 @@ albumsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), asyn
   }
 });
 
-albumsRouter.get('/:id', async (req, res, next) => {
+albumsRouter.get('/:id', permit('admin'), async (req, res, next) => {
   try {
     const id = req.params.id;
     if (!id) {
@@ -50,6 +50,43 @@ albumsRouter.get('/:id', async (req, res, next) => {
   } catch (error) {
     if (error instanceof Error.ValidationError) {
       res.status(400).send({ error: error.message });
+    }
+    next(error);
+  }
+});
+
+albumsRouter.delete('/:albumId', auth, permit('admin'), async (req, res, next) => {
+  try {
+    const { albumId } = req.params;
+
+    if (!albumId) {
+      res.status(400).send({ error: 'AlbumId is required' });
+      return;
+    }
+    await Album.deleteOne({ _id: albumId });
+    res.status(200).send({ message: 'Album is deleted' });
+  } catch (error) {
+    if (error instanceof Error.ValidationError) {
+      res.status(400).send(error);
+    }
+    next(error);
+  }
+});
+
+albumsRouter.patch('/:albumId/togglePublished', auth, permit('admin'), async (req, res, next) => {
+  try {
+    const { albumId } = req.params;
+    const album = await Album.findById({ _id: albumId });
+    const updatedAlbum = await Album.findOneAndUpdate(
+      { _id: albumId },
+      { isPublished: !album?.isPublished },
+      { new: true, runValidators: true },
+    );
+
+    res.status(200).send({ message: 'Album was Published' });
+  } catch (error) {
+    if (error instanceof Error.ValidationError) {
+      res.status(400).send(error);
     }
     next(error);
   }

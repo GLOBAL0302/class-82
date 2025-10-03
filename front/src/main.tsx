@@ -6,7 +6,6 @@ import { persistor, store } from './app/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 import { addInterceptors } from './axiosApi.ts';
 
-
 addInterceptors(store);
 
 createRoot(document.getElementById('root')!).render(

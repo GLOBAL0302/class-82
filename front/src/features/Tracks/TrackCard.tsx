@@ -6,9 +6,13 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { Button, Modal } from '@mui/material';
-import { useAppDispatch } from '../../app/hooks';
-import { addTrackToHistory } from './tracksThunk';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { addTrackToHistory, fetchTracks, trackDeleteThunk, trackToggleThunk } from './tracksThunk';
 import ReactPlayer from 'react-player';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { selectTrackDelLoading } from './tracksSlice';
+import NotesIcon from '@mui/icons-material/Notes';
+import { useParams } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -30,14 +34,24 @@ const TrackCard: React.FC<Props> = ({ track }) => {
   const [modal, closeModal] = React.useState(false);
   const handleOpen = () => closeModal(true);
   const handleClose = () => closeModal(false);
-
   const dispatch = useAppDispatch();
+  const { albumId } = useParams();
+
+  const deletingLoading = useAppSelector(selectTrackDelLoading);
 
   const onPlay = () => {
     handleOpen();
     dispatch(addTrackToHistory(track));
   };
-  console.log(track.url);
+
+  const onCLickPublish = async () => {
+    try {
+      await dispatch(trackToggleThunk(track._id));
+      if (albumId) await dispatch(fetchTracks(albumId)).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Card sx={{ display: 'flex', border: 1, width: 200 }}>
@@ -64,6 +78,10 @@ const TrackCard: React.FC<Props> = ({ track }) => {
           <Typography component="div" variant="h5">
             {track.title}
           </Typography>
+
+          <Typography component="p" variant="body2" className="border-2 p-2 inline-block bg-red-500 text-white">
+            {track.isPublished ? 'Not piublished' : 'Published'}
+          </Typography>
           <Typography component="div" variant="subtitle1" sx={{ textDecoration: 'underline' }}>
             {track.album.artist.title}
           </Typography>
@@ -76,6 +94,14 @@ const TrackCard: React.FC<Props> = ({ track }) => {
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
           <Button onClick={onPlay} startIcon={<PlayArrowIcon sx={{ height: 38, width: 38 }} />}></Button>
+          <Button
+            loading={deletingLoading}
+            disabled={deletingLoading}
+            onClick={() => dispatch(trackDeleteThunk(track._id))}
+            startIcon={<DeleteIcon />}
+            color="error"
+          />
+          <Button onClick={onCLickPublish} startIcon={<NotesIcon />} color="warning" />
         </Box>
       </Box>
     </Card>

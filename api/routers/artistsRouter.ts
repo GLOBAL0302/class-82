@@ -38,15 +38,35 @@ artistsRouter.post('/', auth, permit('admin'), imagesUpload.single('image'), asy
   }
 });
 
-artistsRouter.delete('/:artistId', async (req, res, next) => {
+artistsRouter.delete('/:artistId', auth, permit('admin'), async (req, res, next) => {
   try {
     const { artistId } = req.params;
+
     if (!artistId) {
       res.status(400).send({ error: 'ArtistId is required' });
       return;
     }
-    const deletedArtist = await Artist.deleteOne({ _id: artistId });
+    await Artist.deleteOne({ _id: artistId });
     res.status(200).send({ message: 'Artist is deleted' });
+  } catch (error) {
+    if (error instanceof Error.ValidationError) {
+      res.status(400).send(error);
+    }
+    next(error);
+  }
+});
+
+artistsRouter.patch('/:artistId/togglePublished', async (req, res, next) => {
+  try {
+    const { artistId } = req.params;
+    const artist = await Artist.findById({ _id: artistId });
+    const updatedArtist = await Artist.findOneAndUpdate(
+      { _id: artistId },
+      { isPublished: !artist?.isPublished },
+      { new: true, runValidators: true },
+    );
+
+    res.status(200).send({ message: 'Artist was Published' });
   } catch (error) {
     if (error instanceof Error.ValidationError) {
       res.status(400).send(error);

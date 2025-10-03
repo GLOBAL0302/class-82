@@ -21,7 +21,9 @@ const ArtistsFeature = () => {
   return (
     <>
       <div className="flex justify-end mb-2">
-        <Button variant='contained' color='success' onClick={()=>navigage("/addArtist")}>add Artist</Button>
+        <Button variant="contained" color="success" onClick={() => navigage('/addArtist')}>
+          add Artist
+        </Button>
       </div>
       <div className="flex flex-wrap gap-4 justify-center">
         {allArtist.map((item) => (

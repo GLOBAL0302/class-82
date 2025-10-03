@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosApi } from '../../axiosApi';
 import type { IArtist, IArtistMutation, IGlobalError } from '../../types';
 import { isAxiosError } from 'axios';
+import type { RootState } from '../../app/store';
 
 export const fetchArtist = createAsyncThunk<IArtist[]>('fetch/artists', async () => {
   const { data } = await axiosApi.get('/artists');
@@ -27,5 +28,22 @@ export const postArtistFormThunk = createAsyncThunk<void, IArtistMutation, { rej
       }
       throw error;
     }
+  },
+);
+
+export const artistDeleteThunk = createAsyncThunk<void, string>(
+  'artist/artistDeleteThunk',
+  async (artistId, thunkApi) => {
+    await axiosApi.delete(`/artists/${artistId}`);
+    thunkApi.dispatch(fetchArtist());
+  },
+);
+
+export const artistToggleThunk = createAsyncThunk<void, string, { state: RootState }>(
+  'artists/artistToggleThunk',
+  async (artistId, thunkApi) => {
+    const token = thunkApi.getState().user.user?.token;
+    await axiosApi.patch(`/artists/${artistId}/togglePublished`, { headers: { Authorization: token } });
+    await thunkApi.dispatch(fetchArtist());
   },
 );
