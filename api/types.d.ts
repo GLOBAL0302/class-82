@@ -3,4 +3,7 @@ export interface IUserFields {
   password: string;
   token: string;
   role: string;
+  googleId?: string;
+  displayName?: string;
+  avatar?: string;
 }

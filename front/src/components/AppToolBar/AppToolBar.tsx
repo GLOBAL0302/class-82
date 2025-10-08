@@ -8,7 +8,7 @@ const AppToolBar = () => {
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
   return (
-    <div className="p-4 bg-zinc-900 mb-5 flex justify-between">
+    <div className="p-4 bg-zinc-900 flex justify-between sticky top-0 mb-2 md:mb-0">
       <LibraryMusicIcon fontSize="large" sx={{ color: 'white' }} onClick={() => navigate('/')} />
       <div className="flex gap-3">{user ? <CurrentUser user={user} /> : <Incognito />}</div>
     </div>

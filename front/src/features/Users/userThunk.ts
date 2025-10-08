@@ -39,3 +39,18 @@ export const logOutThunk = createAsyncThunk<void, void>('users/logOutThunk', asy
   await axiosApi.delete('/users/sessions');
   await dispatch(unsetUser());
 });
+
+export const loginGoogleThunk = createAsyncThunk<IUser, string, { rejectValue: IGlobalError }>(
+  'user/loginGoogle',
+  async (credential, { rejectWithValue }) => {
+    try {
+      const { data: user } = await axiosApi.post<IUser>('/users/google', { credential });
+      return user;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data);
+      }
+      throw e;
+    }
+  },
+);

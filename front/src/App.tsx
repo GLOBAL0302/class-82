@@ -12,13 +12,14 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { useAppSelector } from './app/hooks';
 import { selectUser } from './features/Users/userSlice';
 import AddAlbum from './features/Albums/AddAlbum';
+import { Typography } from '@mui/material';
 
 function App() {
   const user = useAppSelector(selectUser);
   return (
-    <>
+    <div className="overflow-hidden h-screen">
       <AppToolBar />
-      <div className="p-5">
+      <div className="px-2">
         <Routes>
           <Route path="/" element={<ArtistsFeature />} />
           <Route path="/login" element={<LoginUser />} />
@@ -27,7 +28,7 @@ function App() {
           <Route path="/tracks" element={<TracksFeature />} />
           <Route path="/tracks/:albumId" element={<TracksFeature />} />
           <Route path="/tracks_history" element={<Track_history />} />
-
+          <Route path="*" element={<Typography variant="h6">404 Not Found</Typography>} />
           <Route
             path="/addArtist"
             element={
@@ -47,7 +48,7 @@ function App() {
           />
         </Routes>
       </div>
-    </>
+    </div>
   );
 }
 

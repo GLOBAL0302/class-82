@@ -17,6 +17,7 @@ const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
   username: {
     type: String,
     required: true,
+    trim: true,
     validate: [
       {
         validator: async function (this: HydratedDocument<IUserFields>, username: string): Promise<boolean> {
@@ -31,6 +32,13 @@ const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
   password: {
     type: String,
     required: true,
+    trim: true,
+    // validate:{
+    //   validator:(value:string)=>{
+    //     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,}).*$/.test(value)
+    //   },
+    //   message:'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character'
+    // }
   },
   token: {
     type: String,
@@ -42,6 +50,9 @@ const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
     required: true,
     default: 'user',
   },
+  displayName: String,
+  googleId: String,
+  avatar: String,
 });
 
 userSchema.pre('save', async function (next) {
