@@ -50,9 +50,15 @@ const userSchema = new schema<IUserFields, IUserModel, IUserMethods>({
     required: true,
     default: 'user',
   },
-  displayName: String,
+  displayName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   googleId: String,
-  avatar: String,
+  avatar: {
+    type: String,
+  },
 });
 
 userSchema.pre('save', async function (next) {

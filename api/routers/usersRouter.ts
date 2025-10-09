@@ -4,6 +4,7 @@ import { User } from '../models/User';
 import { randomUUID } from 'crypto';
 import { OAuth2Client } from 'google-auth-library';
 import { config } from '../config';
+import { imagesUpload } from '../multer';
 
 const usersRouter = express.Router();
 
@@ -20,8 +21,6 @@ usersRouter.post('/google', async (req, res, next) => {
     if (!payload) {
       return res.status(400).send({ error: 'Google Login Error' });
     }
-
-    console.log(payload);
 
     const email = payload.email;
     const id = payload.sub;
@@ -42,7 +41,6 @@ usersRouter.post('/google', async (req, res, next) => {
         avatar,
       });
     }
-
     user.generateToken();
     await user.save();
     res.status(200).send(user);
@@ -51,11 +49,13 @@ usersRouter.post('/google', async (req, res, next) => {
   }
 });
 
-usersRouter.post('/', async (req, res, next) => {
+usersRouter.post('/', imagesUpload.single('avatar'), async (req, res, next) => {
   try {
     const newUser = new User({
       username: req.body.username,
       password: req.body.password,
+      displayName: req.body.displayName,
+      avatar: req.file ? 'images' + req.file.filename : null,
     });
 
     newUser.generateToken();

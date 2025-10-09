@@ -2,14 +2,22 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosApi } from '../../axiosApi';
 import type { IUser, ISigninMutation, RegisterResponse, ValidationError, IGlobalError } from '../../types';
 import { isAxiosError } from 'axios';
-import type { RootState } from '../../app/store';
+
 import { unsetUser } from './userSlice';
 
 export const signinThunk = createAsyncThunk<RegisterResponse, ISigninMutation, { rejectValue: ValidationError }>(
   'user/signin',
   async (userMutation, { rejectWithValue }) => {
     try {
-      const { data } = await axiosApi.post('/users', userMutation);
+      const dataForm = new FormData();
+      const keys = Object.keys(userMutation) as (keyof ISigninMutation)[];
+      keys.forEach((key) => {
+        const value = userMutation[key];
+        if (value !== null) {
+          dataForm.append(key, value);
+        }
+      });
+      const { data } = await axiosApi.post('/users', dataForm);
       return data;
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 400) {

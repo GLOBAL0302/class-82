@@ -1,9 +1,10 @@
-import { Button, Menu, MenuItem, Typography } from '@mui/material';
+import { Button, CardMedia, Menu, MenuItem } from '@mui/material';
 import type { IUser } from '../../types';
 import { useState, type MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../app/hooks';
 import { logOutThunk } from '../../features/Users/userThunk';
+import { apiUrl } from '../../GlobalConstant';
 
 interface Props {
   user: IUser;
@@ -14,6 +15,12 @@ const CurrentUser: React.FC<Props> = ({ user }) => {
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  let image = user.avatar;
+
+  if (user.avatar && /^images/.test(user.avatar)) {
+    image = apiUrl + '/' + user.avatar;
+  }
 
   const handleClick = (e: MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -37,8 +44,10 @@ const CurrentUser: React.FC<Props> = ({ user }) => {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        {user.username}
+        {user.displayName}
       </Button>
+      <CardMedia sx={{ width: 56, height: 56, borderRadius: '50%' }} component={'img'} image={image} />
+
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}

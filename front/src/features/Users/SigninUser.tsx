@@ -6,9 +6,15 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { loginGoogleThunk, signinThunk } from './userThunk';
 import { selectUserSigninError, selectUserSigninLoading } from './userSlice';
 import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
-const initalStateUserMutation = {
+import { VisuallyHiddenInput } from '../Artists/AddArtistForm';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CloudDoneIcon from '@mui/icons-material/CloudDone';
+import type { ISigninMutation } from '../../types';
+const initalStateUserMutation: ISigninMutation = {
   username: '',
   password: '',
+  displayName: '',
+  avatar: null,
 };
 
 const SigninUser = () => {
@@ -51,6 +57,16 @@ const SigninUser = () => {
       navigate('/');
     }
   };
+
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files, name } = e.target;
+    if (files) {
+      setUserMutation((prevState) => ({
+        ...prevState,
+        [name]: files[0] || null,
+      }));
+    }
+  };
   return (
     <Box component="div" className="flex flex-col md:flex-row justify-center items-center space-x-6 h-screen ">
       <Box component="div" className="hidden md:block w-1/2">
@@ -91,6 +107,30 @@ const SigninUser = () => {
             error={Boolean(getFieldError('password'))}
             helperText={getFieldError('password')}
           />
+
+          <TextField
+            id="displayName"
+            label="Display Name"
+            name="displayName"
+            fullWidth
+            variant="filled"
+            onChange={handleUserMutation}
+            type="text"
+            autoComplete="new-displayName"
+            error={Boolean(getFieldError('displayName'))}
+            helperText={getFieldError('displayName')}
+          />
+          <Button
+            color={userMutation.avatar ? 'success' : 'info'}
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={userMutation.avatar ? <CloudDoneIcon /> : <CloudUploadIcon />}
+          >
+            {userMutation.avatar ? userMutation.avatar.name : 'Upload Images'}
+            <VisuallyHiddenInput type="file" onChange={onChangeFile} name="avatar" id="avatar" />
+          </Button>
           <Button disabled={signinLoading} loading={signinLoading} variant="contained" color="primary" type="submit">
             Signin
           </Button>
